@@ -1,0 +1,7 @@
+{
+  "name": "gltf2usdz",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
+  "forwardPorts": [4000]
+}
