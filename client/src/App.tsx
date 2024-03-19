@@ -141,7 +141,7 @@ function App() {
           onDragEnter={handleDrag}
         >
           <div className="w-7/12 text-center pointer-events-auto">
-            <p className="text-3xl">gltf2usdz.online</p>
+            <h1 className="text-3xl">gltf2usdz.online</h1>
 
             <button className="pt-5" onClick={onButtonClick}>
               {MESSAGES[state]}
