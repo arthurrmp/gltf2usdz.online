@@ -33,6 +33,17 @@ For frontend development, navigate to the **client** directory and run:
 bun run dev
 ```
 
-## Deploy
+## Docker Image
 
-There's a Docker image for the project available at [Docker Hub](https://hub.docker.com/r/arthurrmp/gltf2usdz-online). You can deploy it to your favorite cloud provider or use the Dockerfile to build your own image.
+There's a Docker image for the project available at [Docker Hub](https://hub.docker.com/r/arthurrmp/gltf2usdz-online). 
+
+To run it on your machine, ensure [Docker](https://www.docker.com/products/docker-desktop) is installed and run the command:
+
+```bash
+docker run -it -p 4000:4000 arthurrmp/gltf2usdz-online
+```
+
+After that, you will be able to access the project at http://localhost:4000. All processing will happen locally.
+
+You can also deploy it to any cloud provider.
+
