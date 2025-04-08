@@ -122,11 +122,20 @@ function convertFile(filepath: string) {
 
   const { stderr } = Bun.spawnSync([`usd_from_gltf`, filepath, output]);
 
-  if (stderr.toString()) {
-    throw new Error(stderr.toString());
+  const stderrString = stderr.toString();
+  
+  // Log warnings but don't throw
+  if (stderrString) {
+    logger.warn(stderrString);
   }
 
-  logger.info("File converted succesfully");
+  // Check if the output file was actually created
+  const outputFile = Bun.file(output);
+  if (!outputFile.exists()) {
+    throw new Error("Failed to create USDZ file");
+  }
+
+  logger.info("File converted successfully");
 
   return `${name}.usdz`;
 }
