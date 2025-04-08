@@ -124,12 +124,10 @@ function convertFile(filepath: string) {
 
   const stderrString = stderr.toString();
   
-  // Log warnings but don't throw
   if (stderrString) {
     logger.warn(stderrString);
   }
 
-  // Check if the output file was actually created
   const outputFile = Bun.file(output);
   if (!outputFile.exists()) {
     throw new Error("Failed to create USDZ file");
