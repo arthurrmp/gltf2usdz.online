@@ -49,9 +49,12 @@ function App() {
         const url = URL.createObjectURL(
           new Blob([msg.usdz], { type: "model/vnd.usdz+zip" }),
         );
-        setResults((prev) =>
-          [{ name: msg.name, url, size: msg.usdz.byteLength }, ...prev].slice(0, 5),
-        );
+        setResults((prev) => {
+          const next = [{ name: msg.name, url, size: msg.usdz.byteLength }, ...prev];
+          // Free blob URLs that fall off the kept list.
+          next.slice(5).forEach((f) => URL.revokeObjectURL(f.url));
+          return next.slice(0, 5);
+        });
         setStatus("success");
       } else if (msg.type === "error") {
         setError(msg.message);

@@ -30,7 +30,7 @@ bun run dev        # client dev server (Vite)
 ## Build & deploy
 
 ```bash
-bun run build      # outputs static site to client/dist
+bun run build      # outputs static site to ./dist
 bun run deploy     # build + wrangler deploy (Cloudflare assets-only Worker)
 ```
 

@@ -6,7 +6,7 @@ import "./buffer-shim";
 // converter's own parser registers neither), decodes the document, reports
 // model stats, lets the UI pick which animation to keep, transcodes any
 // KTX2/Basis textures to PNG, then hands a plain GLB to convertGlbToUsdz().
-import { WebIO, type Document } from "@gltf-transform/core";
+import { WebIO, type Document, type JSONDocument } from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import draco3d from "draco3dgltf";
 import dracoWasmUrl from "draco3dgltf/draco_decoder_gltf.wasm?url";
@@ -52,6 +52,19 @@ async function getIO(): Promise<WebIO> {
   return ioPromise;
 }
 
+function dataUriToBytes(uri: string): Uint8Array<ArrayBuffer> {
+  const comma = uri.indexOf(",");
+  const meta = uri.slice(5, comma);
+  const data = uri.slice(comma + 1);
+  if (meta.includes(";base64")) {
+    const bin = atob(data);
+    const out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+  return new Uint8Array(new TextEncoder().encode(decodeURIComponent(data)));
+}
+
 const post = (msg: unknown, transfer?: Transferable[]) =>
   (self as DedicatedWorkerGlobalScope).postMessage(msg, transfer ?? []);
 const progress = (stage: string) => post({ type: "progress", stage });
@@ -70,7 +83,34 @@ self.onmessage = async (e: MessageEvent<InMessage>) => {
     if (e.data.type === "load") {
       progress("Reading model");
       const io = await getIO();
-      const doc = await io.readBinary(new Uint8Array(e.data.buffer));
+      const bytes = new Uint8Array(e.data.buffer);
+      // Binary GLB starts with the magic "glTF"; otherwise treat as JSON glTF.
+      const isGlb =
+        bytes[0] === 0x67 &&
+        bytes[1] === 0x6c &&
+        bytes[2] === 0x54 &&
+        bytes[3] === 0x46;
+      let doc;
+      if (isGlb) {
+        doc = await io.readBinary(bytes);
+      } else {
+        // Self-contained .gltf: decode embedded data: URIs into resources
+        // (readJSON does not resolve URIs itself). A .gltf referencing
+        // external files can't be read from a single upload.
+        const json = JSON.parse(new TextDecoder().decode(bytes));
+        const lists = [json.buffers, json.images] as ({ uri?: string }[] | undefined)[];
+        const resources: Record<string, Uint8Array<ArrayBuffer>> = {};
+        for (const item of [...(lists[0] ?? []), ...(lists[1] ?? [])]) {
+          if (item.uri?.startsWith("data:")) {
+            resources[item.uri] = dataUriToBytes(item.uri);
+          } else if (item.uri) {
+            throw new Error(
+              "This .gltf references external files. Please upload a .glb or a self-contained .gltf.",
+            );
+          }
+        }
+        doc = await io.readJSON({ json, resources } as JSONDocument);
+      }
       currentDoc = doc;
       const animations = doc
         .getRoot()
