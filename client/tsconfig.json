@@ -25,5 +25,6 @@
     }
   },
   "include": ["src"],
+  "exclude": ["src/vendor", "src/lib/basis", "src/lib/ktx2.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

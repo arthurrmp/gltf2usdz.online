@@ -1,7 +1,7 @@
 export type ConvertedFile = {
-  id: string;
-  expires: number;
   name: string;
+  url: string;
+  size: number;
 };
 
 export enum STATES {
@@ -15,8 +15,8 @@ export enum STATES {
 export const MESSAGES = {
   [STATES.IDLE]: "Drag and drop your file or click here to convert",
   [STATES.DRAGGING]: "Release your file to begin conversion",
-  [STATES.LOADING]: "Converting file. This may take a few minutes",
-  [STATES.SUCCESS]: "File converted successfully. Use the link below to download it or click to convert more files.",
+  [STATES.LOADING]: "Converting in your browser… this can take a moment for large models",
+  [STATES.SUCCESS]: "Converted in your browser. Download below, or click to convert another file.",
   [STATES.ERROR]: "Conversion to USDZ failed.",
 } as const;
 

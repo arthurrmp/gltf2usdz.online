@@ -2,7 +2,11 @@
   "name": "gltf2usdz.online",
   "private": true,
   "workspaces": [
-    "client",
-    "server"
-  ]
+    "client"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd client dev",
+    "build": "bun run --cwd client build",
+    "deploy": "bun run --cwd client build && bun run --cwd client exec wrangler deploy"
+  }
 }
