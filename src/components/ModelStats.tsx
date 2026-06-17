@@ -20,7 +20,7 @@ export const ModelStats = ({ stats }: { stats: Stats }) => (
         {stats.compression.map((c) => (
           <span
             key={c}
-            className="rounded-full bg-fuchsia-500/15 px-2.5 py-0.5 text-[11px] font-medium text-fuchsia-200 ring-1 ring-fuchsia-400/20"
+            className="rounded-full bg-lime-500/15 px-2.5 py-0.5 text-[11px] font-medium text-lime-200 ring-1 ring-lime-400/25"
           >
             {c}
           </span>

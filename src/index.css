@@ -5,10 +5,10 @@
     ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
 
-  /* Brand glow palette */
-  --color-glow-1: oklch(0.62 0.22 280); /* indigo  */
-  --color-glow-2: oklch(0.65 0.25 330); /* fuchsia */
-  --color-glow-3: oklch(0.72 0.16 220); /* cyan    */
+  /* Brand glow palette (lime / green) */
+  --color-glow-1: oklch(0.82 0.22 130); /* lime        */
+  --color-glow-2: oklch(0.62 0.17 150); /* green       */
+  --color-glow-3: oklch(0.7 0.13 175); /* green-teal  */
 
   --animate-float-slow: float-slow 22s ease-in-out infinite;
   --animate-float-slower: float-slow 34s ease-in-out infinite reverse;

@@ -155,7 +155,7 @@ function App() {
 
       <main className="flex flex-1 flex-col items-center justify-center px-5 py-10">
         <div className="w-full max-w-md text-center">
-          <h1 className="bg-gradient-to-br from-white via-white to-fuchsia-200/80 bg-clip-text text-4xl font-semibold tracking-tight text-transparent">
+          <h1 className="bg-gradient-to-br from-white via-white to-lime-200/80 bg-clip-text text-4xl font-semibold tracking-tight text-transparent">
             gltf2usdz
           </h1>
           <p className="mt-2 text-sm text-white/50">
@@ -170,7 +170,7 @@ function App() {
               interactive
                 ? "cursor-pointer ring-white/10 hover:bg-white/[0.06]"
                 : "ring-white/10",
-              status === "dragging" ? "bg-white/[0.08] ring-2 ring-fuchsia-400/60" : "",
+              status === "dragging" ? "bg-white/[0.08] ring-2 ring-lime-400/60" : "",
             ].join(" ")}
           >
             <AnimatePresence mode="wait">

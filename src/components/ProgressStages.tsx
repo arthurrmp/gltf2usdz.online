@@ -5,7 +5,7 @@ export const ProgressStages = ({ stage }: { stage: string }) => (
   <div className="flex flex-col items-center gap-4 py-2">
     <div className="relative h-14 w-14">
       <div className="absolute inset-0 rounded-full border-2 border-white/10" />
-      <div className="absolute inset-0 animate-[spin-ring_0.9s_linear_infinite] rounded-full border-2 border-transparent border-t-fuchsia-400 border-r-indigo-400" />
+      <div className="absolute inset-0 animate-[spin-ring_0.9s_linear_infinite] rounded-full border-2 border-transparent border-t-lime-400 border-r-green-400" />
     </div>
     <motion.span
       key={stage}

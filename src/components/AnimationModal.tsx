@@ -38,7 +38,7 @@ export const AnimationModal = ({ animations, onSelect, onCancel }: Props) => (
             <button
               key={i}
               onClick={() => onSelect(i)}
-              className="truncate rounded-xl bg-white/[0.04] px-3.5 py-2.5 text-left text-sm font-medium text-white/90 ring-1 ring-white/10 transition hover:bg-white/10 hover:ring-white/20"
+              className="shrink-0 truncate rounded-xl bg-white/[0.04] px-3.5 py-3 text-left text-sm font-medium leading-normal text-white/90 ring-1 ring-white/10 transition hover:bg-white/10 hover:ring-white/20"
             >
               {name}
             </button>
