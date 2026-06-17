@@ -176,3 +176,10 @@ dist
 
 # Local runtime data (uploaded files, logs)
 .data/
+
+# Vite build extras
+dist-ssr
+*.local
+
+# Wrangler local state
+.wrangler/
