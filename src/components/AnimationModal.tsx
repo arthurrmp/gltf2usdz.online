@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,6 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 type Props = {
   animations: string[];
@@ -31,17 +33,19 @@ export const AnimationModal = ({ animations, onSelect, onCancel }: Props) => (
         </DialogDescription>
       </DialogHeader>
 
-      <div className="scroll-soft -mr-2 flex max-h-56 flex-col divide-y divide-border overflow-y-auto pr-2">
+      <div className="scroll-soft -mr-2 flex max-h-56 flex-col overflow-y-auto pr-2">
         {animations.map((name, i) => (
-          <Button
-            key={i}
-            variant="ghost"
-            size="lg"
-            onClick={() => onSelect(i)}
-            className="h-auto w-full shrink-0 justify-start rounded-none py-2.5 font-normal"
-          >
-            <span className="truncate">{name}</span>
-          </Button>
+          <Fragment key={i}>
+            {i > 0 && <Separator />}
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={() => onSelect(i)}
+              className="h-auto w-full shrink-0 justify-start rounded-none py-2.5 font-normal"
+            >
+              <span className="truncate">{name}</span>
+            </Button>
+          </Fragment>
         ))}
       </div>
 

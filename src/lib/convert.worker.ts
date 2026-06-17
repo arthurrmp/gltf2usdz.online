@@ -63,7 +63,7 @@ type Keep = number | null | "all";
 
 type InMessage =
   | { type: "load"; buffer: ArrayBuffer; name: string }
-  | { type: "convert"; keep: Keep; name: string };
+  | { type: "convert"; keep: Keep; name: string; animationName?: string };
 
 self.onmessage = async (e: MessageEvent<InMessage>) => {
   try {
@@ -81,7 +81,7 @@ self.onmessage = async (e: MessageEvent<InMessage>) => {
     }
 
     if (e.data.type === "convert") {
-      const { keep, name } = e.data;
+      const { keep, name, animationName } = e.data;
       const doc = currentDoc;
       if (!doc) throw new Error("No model loaded.");
       const io = await getIO();
@@ -124,8 +124,12 @@ self.onmessage = async (e: MessageEvent<InMessage>) => {
       const usdz = await convertGlbToUsdz(ab, usdzConfig);
       const out = await usdz.arrayBuffer();
       const base = name.replace(/\.(glb|gltf)$/i, "");
+      // Append the kept clip's name when a single animation was selected.
+      const suffix = animationName
+        ? "_" + animationName.trim().replace(/[^\w.-]+/g, "_")
+        : "";
       currentDoc = null;
-      post({ type: "done", usdz: out, name: `${base}.usdz` }, [out]);
+      post({ type: "done", usdz: out, name: `${base}${suffix}.usdz` }, [out]);
       return;
     }
   } catch (err) {

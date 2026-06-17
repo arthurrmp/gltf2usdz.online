@@ -85,6 +85,8 @@ function App() {
   };
 
   const chooseAnimation = (keep: number | null | "all") => {
+    const animationName =
+      typeof keep === "number" ? animations?.[keep] : undefined;
     setAnimations(null);
     setStage("Preparing geometry");
     setStatus("working");
@@ -92,6 +94,7 @@ function App() {
       type: "convert",
       keep,
       name: pendingName.current,
+      animationName,
     });
   };
 
