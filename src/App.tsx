@@ -152,7 +152,7 @@ function App() {
       <main className="flex flex-1 flex-col items-center justify-center px-5 py-10">
         <div className="w-full max-w-md text-center">
           <h1 className="bg-gradient-to-br from-white via-white to-lime-200/80 bg-clip-text text-4xl font-semibold tracking-tight text-transparent">
-            gltf2usdz
+            gltf2usdz.online
           </h1>
           <p className="mt-2 text-sm text-white/50">
             glTF / GLB → USDZ for AR Quick Look, converted in your browser.
