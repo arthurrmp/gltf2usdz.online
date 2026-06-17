@@ -29,7 +29,7 @@ bun run dev        # client dev server (Vite)
 ## Build & deploy
 
 ```bash
-bun run build      # outputs static site to client/dist
+bun run build      # outputs static site to dist/
 bun run deploy     # build + wrangler deploy (Cloudflare assets-only Worker)
 ```
 
@@ -39,3 +39,11 @@ bun run deploy     # build + wrangler deploy (Cloudflare assets-only Worker)
   (it is not published to npm). MIT, license retained in that directory.
 - `src/lib/basis/` — Basis Universal transcoder (Apache-2.0), vendored
   from three.js. See `NOTICE.md` there.
+
+## Acknowledgments
+
+- [WebUsdFramework](https://github.com/chrismichaelps/WebUsdFramework) by
+  [Chris M. Pérez](https://github.com/chrismichaelps) — the glTF → USDZ
+  converter this whole tool is built around.
+- [shadcn/ui](https://ui.shadcn.com) and [aceternity UI](https://ui.aceternity.com)
+  — the UI is hand-written, but the design language draws on theirs.
