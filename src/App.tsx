@@ -2,23 +2,21 @@ import React from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { GradientBackdrop } from "@/components/GradientBackdrop";
 import { AnimationModal } from "@/components/AnimationModal";
-import { ModelStats } from "@/components/ModelStats";
 import { ProgressStages } from "@/components/ProgressStages";
 import { ResultList } from "@/components/ResultList";
 import { Footer } from "@/components/Footer";
 import { IconUpload, IconLock, IconCheck, IconAlert } from "@/components/icons";
-import type { ConvertedFile, ModelStats as Stats, Status } from "@/common";
+import type { ConvertedFile, Status } from "@/common";
 
 type WorkerOut =
   | { type: "progress"; stage: string }
-  | { type: "loaded"; animations: string[]; stats: Stats }
+  | { type: "loaded"; animations: string[] }
   | { type: "done"; usdz: ArrayBuffer; name: string }
   | { type: "error"; message: string };
 
 function App() {
   const [status, setStatus] = React.useState<Status>("idle");
   const [stage, setStage] = React.useState("Reading model");
-  const [stats, setStats] = React.useState<Stats | null>(null);
   const [animations, setAnimations] = React.useState<string[] | null>(null);
   const [error, setError] = React.useState("");
   const [results, setResults] = React.useState<ConvertedFile[]>([]);
@@ -37,7 +35,6 @@ function App() {
       if (msg.type === "progress") {
         setStage(msg.stage);
       } else if (msg.type === "loaded") {
-        setStats(msg.stats);
         if (msg.animations.length > 1) {
           setAnimations(msg.animations);
         } else {
@@ -71,7 +68,6 @@ function App() {
       return;
     }
     setError("");
-    setStats(null);
     setAnimations(null);
     setStage("Reading model");
     setStatus("working");
@@ -87,7 +83,7 @@ function App() {
     }
   };
 
-  const chooseAnimation = (keep: number | null) => {
+  const chooseAnimation = (keep: number | null | "all") => {
     setAnimations(null);
     setStage("Preparing geometry");
     setStatus("working");
@@ -204,7 +200,6 @@ function App() {
                   exit={{ opacity: 0 }}
                   className="flex flex-col gap-5"
                 >
-                  {stats && <ModelStats stats={stats} />}
                   <ProgressStages stage={stage} />
                 </motion.div>
               )}
@@ -221,7 +216,6 @@ function App() {
                     <IconCheck className="h-5 w-5" />
                     <span className="text-sm font-medium">Converted</span>
                   </div>
-                  {stats && <ModelStats stats={stats} />}
                   <ResultList files={results} />
                   <button
                     onClick={openPicker}

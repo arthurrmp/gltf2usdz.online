@@ -14,14 +14,6 @@ import { MeshoptDecoder } from "meshoptimizer";
 import { convertGlbToUsdz, type GltfTransformConfig } from "webusd";
 import { transcodeKtx2Textures } from "./ktx2";
 
-export type ModelStats = {
-  triangles: number;
-  vertices: number;
-  textures: number;
-  animations: number;
-  compression: string[]; // e.g. ["Draco", "KTX2"]
-};
-
 const usdzConfig: GltfTransformConfig = {
   debug: false,
   debugOutputDir: "./debug-output",
@@ -64,44 +56,14 @@ const post = (msg: unknown, transfer?: Transferable[]) =>
   (self as DedicatedWorkerGlobalScope).postMessage(msg, transfer ?? []);
 const progress = (stage: string) => post({ type: "progress", stage });
 
-const COMPRESSION_LABELS: Record<string, string> = {
-  KHR_draco_mesh_compression: "Draco",
-  EXT_meshopt_compression: "Meshopt",
-  KHR_texture_basisu: "KTX2",
-};
-
-function computeStats(doc: Document): ModelStats {
-  const root = doc.getRoot();
-  let triangles = 0;
-  let vertices = 0;
-  for (const mesh of root.listMeshes()) {
-    for (const prim of mesh.listPrimitives()) {
-      const pos = prim.getAttribute("POSITION");
-      if (pos) vertices += pos.getCount();
-      const idx = prim.getIndices();
-      const count = idx ? idx.getCount() : (pos?.getCount() ?? 0);
-      triangles += Math.floor(count / 3);
-    }
-  }
-  const compression = root
-    .listExtensionsUsed()
-    .map((e) => COMPRESSION_LABELS[e.extensionName])
-    .filter((v, i, a): v is string => Boolean(v) && a.indexOf(v) === i);
-
-  return {
-    triangles,
-    vertices,
-    textures: root.listTextures().length,
-    animations: root.listAnimations().length,
-    compression,
-  };
-}
-
 let currentDoc: Document | null = null;
+
+// keep: a clip index to keep, null = strip all, "all" = keep every clip.
+type Keep = number | null | "all";
 
 type InMessage =
   | { type: "load"; buffer: ArrayBuffer; name: string }
-  | { type: "convert"; keep: number | null; name: string };
+  | { type: "convert"; keep: Keep; name: string };
 
 self.onmessage = async (e: MessageEvent<InMessage>) => {
   try {
@@ -114,7 +76,7 @@ self.onmessage = async (e: MessageEvent<InMessage>) => {
         .getRoot()
         .listAnimations()
         .map((a, i) => a.getName() || `Animation ${i + 1}`);
-      post({ type: "loaded", animations, stats: computeStats(doc) });
+      post({ type: "loaded", animations });
       return;
     }
 
@@ -124,11 +86,15 @@ self.onmessage = async (e: MessageEvent<InMessage>) => {
       if (!doc) throw new Error("No model loaded.");
       const io = await getIO();
 
-      // Keep only the chosen animation (null = strip all).
-      const anims = doc.getRoot().listAnimations();
-      anims.forEach((a, i) => {
-        if (keep === null || i !== keep) a.dispose();
-      });
+      // keep === "all": leave every clip. Otherwise keep one (number) or none (null).
+      if (keep !== "all") {
+        doc
+          .getRoot()
+          .listAnimations()
+          .forEach((a, i) => {
+            if (keep === null || i !== keep) a.dispose();
+          });
+      }
 
       // Drop geometry-compression extensions so the plain GLB re-encode does
       // not attempt to re-compress (no encoders registered).
