@@ -31,14 +31,14 @@ export const AnimationModal = ({ animations, onSelect, onCancel }: Props) => (
         </DialogDescription>
       </DialogHeader>
 
-      <div className="scroll-soft -mr-2 flex max-h-56 flex-col gap-1 overflow-y-auto pr-2">
+      <div className="scroll-soft -mr-2 flex max-h-56 flex-col divide-y divide-border overflow-y-auto pr-2">
         {animations.map((name, i) => (
           <Button
             key={i}
             variant="ghost"
             size="lg"
             onClick={() => onSelect(i)}
-            className="h-auto w-full shrink-0 justify-start py-2.5 font-normal"
+            className="h-auto w-full shrink-0 justify-start rounded-none py-2.5 font-normal"
           >
             <span className="truncate">{name}</span>
           </Button>
