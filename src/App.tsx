@@ -5,6 +5,7 @@ import { AnimationModal } from "@/components/AnimationModal";
 import { ProgressStages } from "@/components/ProgressStages";
 import { ResultList } from "@/components/ResultList";
 import { Footer } from "@/components/Footer";
+import { Button } from "@/components/ui/button";
 import { IconUpload, IconLock, IconCheck, IconAlert } from "@/components/icons";
 import type { ConvertedFile, Status } from "@/common";
 
@@ -151,22 +152,22 @@ function App() {
 
       <main className="flex flex-1 flex-col items-center justify-center px-5 py-10">
         <div className="w-full max-w-md text-center">
-          <h1 className="bg-gradient-to-br from-white via-white to-lime-200/80 bg-clip-text text-4xl font-semibold tracking-tight text-transparent">
+          <h1 className="bg-gradient-to-br from-foreground via-foreground to-primary bg-clip-text text-4xl font-semibold tracking-tight text-transparent">
             gltf2usdz.online
           </h1>
-          <p className="mt-2 text-sm text-white/50">
+          <p className="mt-2 text-sm text-muted-foreground">
             glTF / GLB → USDZ for AR Quick Look, converted in your browser.
           </p>
 
-          {/* Morphing glass card */}
+          {/* Morphing card */}
           <div
             onClick={interactive ? openPicker : undefined}
             className={[
-              "relative mt-7 overflow-hidden rounded-3xl bg-white/[0.04] p-6 ring-1 backdrop-blur-2xl transition",
+              "mt-7 overflow-hidden rounded-3xl border bg-card p-6 text-card-foreground shadow-xl transition",
               interactive
-                ? "cursor-pointer ring-white/10 hover:bg-white/[0.06]"
-                : "ring-white/10",
-              status === "dragging" ? "bg-white/[0.08] ring-2 ring-lime-400/60" : "",
+                ? "cursor-pointer border-border hover:bg-muted/40"
+                : "border-border",
+              status === "dragging" ? "border-primary bg-primary/5 ring-2 ring-primary/40" : "",
             ].join(" ")}
           >
             <AnimatePresence mode="wait">
@@ -178,16 +179,18 @@ function App() {
                   exit={{ opacity: 0 }}
                   className="flex flex-col items-center gap-3 py-6"
                 >
-                  <span className="grid h-14 w-14 place-items-center rounded-2xl bg-white/[0.06] text-white/80 ring-1 ring-white/10">
-                    <IconUpload className="h-6 w-6" />
+                  <span className="grid size-14 place-items-center rounded-2xl bg-muted text-foreground">
+                    <IconUpload className="size-6" />
                   </span>
                   <div>
-                    <p className="text-base font-medium text-white">
+                    <p className="text-base font-medium text-foreground">
                       {status === "dragging"
                         ? "Drop to convert"
                         : "Drop a .glb or .gltf"}
                     </p>
-                    <p className="text-sm text-white/45">or click to choose a file</p>
+                    <p className="text-sm text-muted-foreground">
+                      or click to choose a file
+                    </p>
                   </div>
                 </motion.div>
               )}
@@ -198,7 +201,6 @@ function App() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex flex-col gap-5"
                 >
                   <ProgressStages stage={stage} />
                 </motion.div>
@@ -212,17 +214,14 @@ function App() {
                   exit={{ opacity: 0 }}
                   className="flex flex-col gap-4"
                 >
-                  <div className="flex items-center justify-center gap-2 text-emerald-300">
-                    <IconCheck className="h-5 w-5" />
+                  <div className="flex items-center justify-center gap-2 text-primary">
+                    <IconCheck className="size-5" />
                     <span className="text-sm font-medium">Converted</span>
                   </div>
                   <ResultList files={results} />
-                  <button
-                    onClick={openPicker}
-                    className="mt-1 rounded-xl bg-white/[0.06] px-4 py-2.5 text-sm font-medium text-white/80 ring-1 ring-white/10 transition hover:bg-white/10 hover:text-white"
-                  >
+                  <Button variant="secondary" onClick={openPicker}>
                     Convert another
-                  </button>
+                  </Button>
                 </motion.div>
               )}
 
@@ -234,23 +233,20 @@ function App() {
                   exit={{ opacity: 0 }}
                   className="flex flex-col items-center gap-3 py-4"
                 >
-                  <span className="grid h-12 w-12 place-items-center rounded-2xl bg-rose-500/15 text-rose-300 ring-1 ring-rose-400/20">
-                    <IconAlert className="h-6 w-6" />
+                  <span className="grid size-12 place-items-center rounded-2xl bg-destructive/15 text-destructive">
+                    <IconAlert className="size-6" />
                   </span>
-                  <p className="text-sm text-white/70">{error}</p>
-                  <button
-                    onClick={openPicker}
-                    className="rounded-xl bg-white/[0.06] px-4 py-2.5 text-sm font-medium text-white/80 ring-1 ring-white/10 transition hover:bg-white/10 hover:text-white"
-                  >
+                  <p className="text-sm text-muted-foreground">{error}</p>
+                  <Button variant="secondary" onClick={openPicker}>
                     Try again
-                  </button>
+                  </Button>
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
 
-          <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-white/40">
-            <IconLock className="h-3.5 w-3.5" />
+          <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+            <IconLock className="size-3.5" />
             Runs entirely on your device — files never leave your browser.
           </p>
         </div>
