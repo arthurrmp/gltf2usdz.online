@@ -24,15 +24,33 @@ Made with:
 
 ```bash
 bun install
-bun run dev        # client dev server (Vite)
+bun run dev        # dev server (Vite)
+bun run lint       # eslint
+bun run typecheck  # tsc --noEmit
+bun test src       # unit + conversion tests (bun:test)
 ```
 
 ## Build & deploy
 
 ```bash
 bun run build      # outputs static site to ./dist
-bun run deploy     # build + wrangler deploy (Cloudflare assets-only Worker)
+bun run deploy     # build + wrangler deploy (uses your local `wrangler login`)
 ```
+
+The app is an **assets-only Cloudflare Worker** served at
+[gltf2usdz.online](https://gltf2usdz.online) via a custom-domain route
+(`wrangler.jsonc`); the zone must already exist in the account.
+
+### CI/CD
+
+`.github/workflows/deploy.yml` runs lint · typecheck · test · build on every
+push and PR, and **deploys to production on push to `main`**. It needs two
+repo secrets:
+
+- `CLOUDFLARE_API_TOKEN` — token with **Workers Scripts: Edit**, plus
+  **DNS: Edit** and **Workers Routes: Edit** on the zone (required to
+  provision the custom domain).
+- `CLOUDFLARE_ACCOUNT_ID` — the account ID.
 
 ## Third-party code
 

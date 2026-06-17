@@ -24,6 +24,6 @@
     }
   },
   "include": ["src"],
-  "exclude": ["src/vendor", "src/lib/basis"],
+  "exclude": ["src/vendor", "src/lib/basis", "src/**/*.test.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

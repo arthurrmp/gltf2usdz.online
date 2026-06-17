@@ -6,5 +6,8 @@
   "assets": {
     "directory": "./dist",
     "not_found_handling": "single-page-application"
-  }
+  },
+  // Serve on the production domain. The zone must already exist in the account;
+  // `wrangler deploy` provisions the custom-domain DNS + route.
+  "routes": [{ "pattern": "gltf2usdz.online", "custom_domain": true }]
 }
