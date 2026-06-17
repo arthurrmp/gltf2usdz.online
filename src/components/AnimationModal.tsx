@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 type Props = {
   animations: string[];
@@ -6,50 +6,60 @@ type Props = {
   onCancel: () => void;
 };
 
-// Shown when an uploaded model has more than one animation. AR Quick Look
-// plays a single timeline, and keeping every clip bloats the USDZ, so the
-// user picks one (or none).
-export const AnimationModal = ({ animations, onSelect, onCancel }: Props) => {
-  return (
-    <div className="fixed inset-0 z-[100] grid place-items-center bg-black/60 backdrop-blur-sm">
+// Shown when a model has more than one animation. AR Quick Look plays a single
+// timeline, and keeping every clip bloats the USDZ, so the user picks one.
+export const AnimationModal = ({ animations, onSelect, onCancel }: Props) => (
+  <AnimatePresence>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 grid place-items-center bg-black/60 p-4 backdrop-blur-md"
+      onClick={onCancel}
+    >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        className="w-[90vw] max-w-md rounded-2xl bg-zinc-900/95 p-6 text-left text-white shadow-2xl ring-1 ring-white/10"
+        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+        transition={{ type: "spring", stiffness: 300, damping: 26 }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md rounded-3xl bg-white/[0.06] p-6 text-left ring-1 ring-white/15 backdrop-blur-2xl"
       >
-        <h2 className="text-lg font-bold">This model has {animations.length} animations</h2>
-        <p className="mt-1 text-sm font-normal text-white/70">
-          USDZ / AR Quick Look plays one timeline. Pick the clip to keep — fewer
-          clips means a much smaller file.
+        <h2 className="text-lg font-semibold text-white">
+          {animations.length} animations found
+        </h2>
+        <p className="mt-1 text-sm text-white/55">
+          AR Quick Look plays one timeline. Pick a clip to keep — fewer clips
+          means a much smaller file.
         </p>
 
-        <div className="mt-4 max-h-60 space-y-1 overflow-y-auto pr-1">
+        <div className="scroll-soft mt-4 flex max-h-56 flex-col gap-1 overflow-y-auto pr-1">
           {animations.map((name, i) => (
             <button
               key={i}
               onClick={() => onSelect(i)}
-              className="block w-full truncate rounded-lg bg-white/5 px-3 py-2 text-left text-sm font-medium hover:bg-white/15"
+              className="truncate rounded-xl bg-white/[0.04] px-3.5 py-2.5 text-left text-sm font-medium text-white/90 ring-1 ring-white/10 transition hover:bg-white/10 hover:ring-white/20"
             >
               {name}
             </button>
           ))}
         </div>
 
-        <div className="mt-4 flex gap-2">
+        <div className="mt-5 flex items-center gap-2">
           <button
             onClick={() => onSelect(null)}
-            className="flex-1 rounded-lg bg-white/10 px-3 py-2 text-sm font-semibold hover:bg-white/20"
+            className="flex-1 rounded-xl bg-white/10 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15"
           >
-            None (static)
+            None — static model
           </button>
           <button
             onClick={onCancel}
-            className="rounded-lg px-3 py-2 text-sm font-medium text-white/60 hover:text-white"
+            className="rounded-xl px-3 py-2.5 text-sm font-medium text-white/50 transition hover:text-white/80"
           >
             Cancel
           </button>
         </div>
       </motion.div>
-    </div>
-  );
-};
+    </motion.div>
+  </AnimatePresence>
+);

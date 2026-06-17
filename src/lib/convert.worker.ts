@@ -3,17 +3,24 @@ import "./buffer-shim";
 // Browser-side GLB/GLTF -> USDZ conversion, off the main thread.
 //
 // Owns a WebIO with Draco + Meshopt decoders registered (the vendored
-// converter's own parser registers neither), decodes the document, lets the UI
-// pick which animation to keep, transcodes any KTX2/Basis textures to PNG, then
-// hands a plain GLB to the vendored convertGlbToUsdz().
+// converter's own parser registers neither), decodes the document, reports
+// model stats, lets the UI pick which animation to keep, transcodes any
+// KTX2/Basis textures to PNG, then hands a plain GLB to convertGlbToUsdz().
 import { WebIO, type Document } from "@gltf-transform/core";
 import { ALL_EXTENSIONS } from "@gltf-transform/extensions";
 import draco3d from "draco3dgltf";
 import dracoWasmUrl from "draco3dgltf/draco_decoder_gltf.wasm?url";
 import { MeshoptDecoder } from "meshoptimizer";
-import { convertGlbToUsdz } from "../vendor/webusd/src/converters/gltf";
-import type { GltfTransformConfig } from "../vendor/webusd/src/schemas";
+import { convertGlbToUsdz, type GltfTransformConfig } from "webusd";
 import { transcodeKtx2Textures } from "./ktx2";
+
+export type ModelStats = {
+  triangles: number;
+  vertices: number;
+  textures: number;
+  animations: number;
+  compression: string[]; // e.g. ["Draco", "KTX2"]
+};
 
 const usdzConfig: GltfTransformConfig = {
   debug: false,
@@ -53,6 +60,43 @@ async function getIO(): Promise<WebIO> {
   return ioPromise;
 }
 
+const post = (msg: unknown, transfer?: Transferable[]) =>
+  (self as DedicatedWorkerGlobalScope).postMessage(msg, transfer ?? []);
+const progress = (stage: string) => post({ type: "progress", stage });
+
+const COMPRESSION_LABELS: Record<string, string> = {
+  KHR_draco_mesh_compression: "Draco",
+  EXT_meshopt_compression: "Meshopt",
+  KHR_texture_basisu: "KTX2",
+};
+
+function computeStats(doc: Document): ModelStats {
+  const root = doc.getRoot();
+  let triangles = 0;
+  let vertices = 0;
+  for (const mesh of root.listMeshes()) {
+    for (const prim of mesh.listPrimitives()) {
+      const pos = prim.getAttribute("POSITION");
+      if (pos) vertices += pos.getCount();
+      const idx = prim.getIndices();
+      const count = idx ? idx.getCount() : (pos?.getCount() ?? 0);
+      triangles += Math.floor(count / 3);
+    }
+  }
+  const compression = root
+    .listExtensionsUsed()
+    .map((e) => COMPRESSION_LABELS[e.extensionName])
+    .filter((v, i, a): v is string => Boolean(v) && a.indexOf(v) === i);
+
+  return {
+    triangles,
+    vertices,
+    textures: root.listTextures().length,
+    animations: root.listAnimations().length,
+    compression,
+  };
+}
+
 let currentDoc: Document | null = null;
 
 type InMessage =
@@ -62,6 +106,7 @@ type InMessage =
 self.onmessage = async (e: MessageEvent<InMessage>) => {
   try {
     if (e.data.type === "load") {
+      progress("Reading model");
       const io = await getIO();
       const doc = await io.readBinary(new Uint8Array(e.data.buffer));
       currentDoc = doc;
@@ -69,11 +114,12 @@ self.onmessage = async (e: MessageEvent<InMessage>) => {
         .getRoot()
         .listAnimations()
         .map((a, i) => a.getName() || `Animation ${i + 1}`);
-      (self as DedicatedWorkerGlobalScope).postMessage({ type: "loaded", animations });
+      post({ type: "loaded", animations, stats: computeStats(doc) });
       return;
     }
 
     if (e.data.type === "convert") {
+      const { keep, name } = e.data;
       const doc = currentDoc;
       if (!doc) throw new Error("No model loaded.");
       const io = await getIO();
@@ -81,37 +127,44 @@ self.onmessage = async (e: MessageEvent<InMessage>) => {
       // Keep only the chosen animation (null = strip all).
       const anims = doc.getRoot().listAnimations();
       anims.forEach((a, i) => {
-        if (e.data.keep === null || i !== e.data.keep) a.dispose();
+        if (keep === null || i !== keep) a.dispose();
       });
 
       // Drop geometry-compression extensions so the plain GLB re-encode does
       // not attempt to re-compress (no encoders registered).
+      let hadKtx2 = false;
       for (const ext of doc.getRoot().listExtensionsUsed()) {
         const n = ext.extensionName;
         if (n === "KHR_draco_mesh_compression" || n === "EXT_meshopt_compression") {
           ext.dispose();
         }
+        if (n === "KHR_texture_basisu") hadKtx2 = true;
       }
 
       // KTX2/Basis textures aren't valid USDZ image payloads — transcode to PNG.
-      await transcodeKtx2Textures(doc);
+      if (hadKtx2) {
+        progress("Transcoding textures");
+        await transcodeKtx2Textures(doc);
+      }
 
+      progress("Preparing geometry");
       const glb = await io.writeBinary(doc);
-      const ab = glb.buffer.slice(glb.byteOffset, glb.byteOffset + glb.byteLength) as ArrayBuffer;
+      const ab = glb.buffer.slice(
+        glb.byteOffset,
+        glb.byteOffset + glb.byteLength,
+      ) as ArrayBuffer;
 
-      const usdz = (await convertGlbToUsdz(ab, usdzConfig)) as Blob;
+      progress("Building USDZ");
+      const usdz = await convertGlbToUsdz(ab, usdzConfig);
       const out = await usdz.arrayBuffer();
-      const base = e.data.name.replace(/\.(glb|gltf)$/i, "");
+      const base = name.replace(/\.(glb|gltf)$/i, "");
       currentDoc = null;
-      (self as DedicatedWorkerGlobalScope).postMessage(
-        { type: "done", usdz: out, name: `${base}.usdz` },
-        [out],
-      );
+      post({ type: "done", usdz: out, name: `${base}.usdz` }, [out]);
       return;
     }
   } catch (err) {
     currentDoc = null;
-    (self as DedicatedWorkerGlobalScope).postMessage({
+    post({
       type: "error",
       message: err instanceof Error ? err.message : String(err),
     });

@@ -1,6 +1,7 @@
 import path from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 
 const nodeStub = path.resolve(__dirname, "./src/lib/node-stub.ts");
 
@@ -21,10 +22,17 @@ const stubbedModules = [
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: [
       { find: "@", replacement: path.resolve(__dirname, "./src") },
+      {
+        find: "webusd",
+        replacement: path.resolve(
+          __dirname,
+          "./src/vendor/webusd/src/converters/gltf",
+        ),
+      },
       ...stubbedModules.flatMap((m) => [
         { find: new RegExp(`^${m}$`), replacement: nodeStub },
         { find: new RegExp(`^node:${m}$`), replacement: nodeStub },

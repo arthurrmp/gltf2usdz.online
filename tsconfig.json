@@ -19,12 +19,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
   "include": ["src"],
-  "exclude": ["src/vendor", "src/lib/basis", "src/lib/ktx2.ts"],
+  "exclude": ["src/vendor", "src/lib/basis"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
