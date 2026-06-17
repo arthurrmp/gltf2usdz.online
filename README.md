@@ -23,6 +23,10 @@
 Your files never leave your device — the GLB → USDZ conversion runs client-side
 in a Web Worker, so there's no upload and no backend. It's just a static site.
 
+> The previous server-based version (Bun + `usd_from_gltf`, Docker) is archived on the
+> [`legacy-server`](https://github.com/arthurrmp/gltf2usdz.online/tree/legacy-server)
+> branch (tag [`v1-server`](https://github.com/arthurrmp/gltf2usdz.online/releases/tag/v1-server)).
+
 ## Features
 
 - 🧊 &nbsp;**glTF / GLB → USDZ**, fully in the browser
