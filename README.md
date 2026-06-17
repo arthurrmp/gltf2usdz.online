@@ -35,11 +35,7 @@ bun run deploy     # build + wrangler deploy (Cloudflare assets-only Worker)
 
 ## Third-party code
 
-- `client/src/vendor/webusd/` — WebUsdFramework source, vendored unmodified
+- `src/vendor/webusd/` — WebUsdFramework source, vendored unmodified
   (it is not published to npm). MIT, license retained in that directory.
-- `client/src/lib/basis/` — Basis Universal transcoder (Apache-2.0), vendored
+- `src/lib/basis/` — Basis Universal transcoder (Apache-2.0), vendored
   from three.js. See `NOTICE.md` there.
-
-## Acknowledgments
-
-- [shadcn/ui](https://ui.shadcn.com) and [aceternity UI](https://ui.aceternity.com) for UI components.

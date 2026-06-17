@@ -29,8 +29,7 @@ export const AnimationModal = ({ animations, onSelect, onCancel }: Props) => (
           {animations.length} animations found
         </h2>
         <p className="mt-1 text-sm text-white/55">
-          AR Quick Look plays one animation. Select a clip if you want, or just
-          convert it.
+          AR Quick Look plays one animation. Select a clip if you want.
         </p>
 
         <div className="scroll-soft mt-4 flex max-h-56 flex-col gap-1 overflow-y-auto pr-1">
