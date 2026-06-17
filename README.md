@@ -13,9 +13,9 @@
 </div>
 
 > [!NOTE]
-> Huge thanks to [**@chrismichaelps**](https://github.com/chrismichaelps) and
+> Huge thanks to [**@chrismichaelps**](https://github.com/chrismichaelps) for
 > [**WebUsdFramework**](https://github.com/chrismichaelps/WebUsdFramework), a
-> pure-JS glTF → USDZ converter. That excellent work let this project drop its
+> pure-TypeScript glTF → USDZ converter. That excellent work let this project drop its
 > entire backend (previously a `usd_from_gltf` Docker service) and run the
 > conversion right in the browser. If gltf2usdz.online is useful to you, give
 > [WebUsdFramework](https://github.com/chrismichaelps/WebUsdFramework) a star. ⭐
