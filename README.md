@@ -1,5 +1,13 @@
 # gltf2usdz.online
 
+> [!NOTE]
+> Huge thanks to [**@chrismichaelps**](https://github.com/chrismichaelps) and
+> [**WebUsdFramework**](https://github.com/chrismichaelps/WebUsdFramework) — a
+> pure-JS glTF → USDZ converter. That excellent work let this project drop its
+> entire backend (previously a `usd_from_gltf` Docker service) and run the
+> conversion right in the browser. If gltf2usdz.online is useful to you, give
+> [WebUsdFramework](https://github.com/chrismichaelps/WebUsdFramework) a star. ⭐
+
 This is the source code for [gltf2usdz.online](https://gltf2usdz.online), a web app
 that converts glTF/GLB files to USDZ for use in AR Quick Look on iOS.
 
