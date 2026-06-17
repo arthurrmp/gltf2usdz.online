@@ -1,4 +1,4 @@
-// Dark canvas with slow-drifting blurred gradient blobs — the "living glow".
+// Dark canvas with slow-drifting blurred gradient blobs - the "living glow".
 // Pure CSS animation, no JS per-frame work.
 export const GradientBackdrop = () => (
   <div className="fixed inset-0 -z-10 overflow-hidden bg-[#07070b]">

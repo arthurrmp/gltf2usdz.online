@@ -253,7 +253,7 @@ function App() {
 
           <p className="mt-4 inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             <IconLock className="size-3.5" />
-            Runs entirely on your device — files never leave your browser.
+            Runs entirely on your device - files never leave your browser.
           </p>
         </div>
       </main>

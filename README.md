@@ -4,7 +4,7 @@
 
 # gltf2usdz.online
 
-**Convert glTF / GLB → USDZ for AR Quick Look — entirely in your browser.**
+**Convert glTF / GLB → USDZ for AR Quick Look, entirely in your browser.**
 
 [![Live](https://img.shields.io/badge/live-gltf2usdz.online-84cc16?logo=cloudflare&logoColor=white)](https://gltf2usdz.online)
 [![License](https://img.shields.io/badge/license-MIT-84cc16)](LICENSE)
@@ -14,13 +14,13 @@
 
 > [!NOTE]
 > Huge thanks to [**@chrismichaelps**](https://github.com/chrismichaelps) and
-> [**WebUsdFramework**](https://github.com/chrismichaelps/WebUsdFramework) — a
+> [**WebUsdFramework**](https://github.com/chrismichaelps/WebUsdFramework), a
 > pure-JS glTF → USDZ converter. That excellent work let this project drop its
 > entire backend (previously a `usd_from_gltf` Docker service) and run the
 > conversion right in the browser. If gltf2usdz.online is useful to you, give
 > [WebUsdFramework](https://github.com/chrismichaelps/WebUsdFramework) a star. ⭐
 
-Your files never leave your device — the GLB → USDZ conversion runs client-side
+Your files never leave your device: the GLB → USDZ conversion runs client-side
 in a Web Worker, so there's no upload and no backend. It's just a static site.
 
 > The previous server-based version (Bun + `usd_from_gltf`, Docker) is archived on the
@@ -30,7 +30,7 @@ in a Web Worker, so there's no upload and no backend. It's just a static site.
 ## Features
 
 - 🧊 &nbsp;**glTF / GLB → USDZ**, fully in the browser
-- 🔒 &nbsp;**Private** — nothing is uploaded, no account, free
+- 🔒 &nbsp;**Private** - nothing is uploaded, no account, free
 - 🗜️ &nbsp;Handles **Draco** & **Meshopt** geometry and **KTX2/Basis** textures (transcoded to PNG)
 - 🎞️ &nbsp;Multi-animation models: keep **one clip, all, or none** (AR Quick Look plays a single timeline)
 - ⚡ &nbsp;Ships as a static **Cloudflare Worker** (assets only)
@@ -38,10 +38,10 @@ in a Web Worker, so there's no upload and no backend. It's just a static site.
 ## Built with
 
 - [React](https://reactjs.org) + [Vite](https://vitejs.dev) + [Tailwind CSS](https://tailwindcss.com) + [shadcn/ui](https://ui.shadcn.com)
-- [WebUsdFramework](https://github.com/chrismichaelps/WebUsdFramework) — the glTF → USDZ converter
-- [glTF-Transform](https://gltf-transform.dev) — glTF parsing & preprocessing
-- [Draco](https://github.com/google/draco) + [meshoptimizer](https://github.com/zeux/meshoptimizer) — geometry decoders
-- [Basis Universal](https://github.com/BinomialLLC/basis_universal) — KTX2 → PNG transcoder
+- [WebUsdFramework](https://github.com/chrismichaelps/WebUsdFramework) - the glTF → USDZ converter
+- [glTF-Transform](https://gltf-transform.dev) - glTF parsing & preprocessing
+- [Draco](https://github.com/google/draco) + [meshoptimizer](https://github.com/zeux/meshoptimizer) - geometry decoders
+- [Basis Universal](https://github.com/BinomialLLC/basis_universal) - KTX2 → PNG transcoder
 
 ## Development
 
@@ -77,13 +77,13 @@ production on push to `main`**. It needs two repository secrets:
 
 ## Third-party code
 
-- `src/vendor/webusd/` — WebUsdFramework source, vendored **unmodified** (it is
+- `src/vendor/webusd/` - WebUsdFramework source, vendored **unmodified** (it is
   not published to npm). MIT; license retained in that directory.
-- `src/lib/basis/` — Basis Universal transcoder (Apache-2.0), vendored from
+- `src/lib/basis/` - Basis Universal transcoder (Apache-2.0), vendored from
   three.js. See `NOTICE.md` there.
 
 ## Acknowledgments
 
 - [WebUsdFramework](https://github.com/chrismichaelps/WebUsdFramework) by
-  Chris M. (Michael) Pérez — the glTF → USDZ converter that powers this tool.
-- [shadcn/ui](https://ui.shadcn.com) — UI components and the theme preset.
+  Chris M. (Michael) Pérez - the glTF → USDZ converter that powers this tool.
+- [shadcn/ui](https://ui.shadcn.com) - UI components and the theme preset.

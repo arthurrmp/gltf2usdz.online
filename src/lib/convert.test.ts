@@ -61,7 +61,7 @@ test("converts a minimal GLB to a valid USDZ", async () => {
   expect(bytes[0]).toBe(0x50);
   expect(bytes[1]).toBe(0x4b);
 
-  // STORE zip keeps file names in plaintext — the USD layer must be present.
+  // STORE zip keeps file names in plaintext - the USD layer must be present.
   let s = "";
   for (let i = 0; i < bytes.length; i++) s += String.fromCharCode(bytes[i]);
   expect(s.includes("model.usda")).toBe(true);

@@ -135,7 +135,7 @@ self.onmessage = async (e: MessageEvent<InMessage>) => {
         if (n === "KHR_texture_basisu") hadKtx2 = true;
       }
 
-      // KTX2/Basis textures aren't valid USDZ image payloads — transcode to PNG.
+      // KTX2/Basis textures aren't valid USDZ image payloads - transcode to PNG.
       if (hadKtx2) {
         progress("Transcoding textures");
         await transcodeKtx2Textures(doc);

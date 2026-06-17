@@ -14,7 +14,7 @@ export const ProgressStages = ({ stage }: { stage: string }) => (
       {stage}…
     </motion.span>
     <span className="text-xs text-muted-foreground">
-      Working locally — large or animated models can take a moment.
+      Working locally - large or animated models can take a moment.
     </span>
   </div>
 );

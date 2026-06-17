@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Document } from "@gltf-transform/core";
 // The Basis transcoder is Emscripten UMD glue (declares `var BASIS`), not an ES
-// module — load it as text and evaluate to capture the factory.
+// module - load it as text and evaluate to capture the factory.
 import basisJsUrl from "./basis/basis_transcoder.js?url";
 import basisWasmUrl from "./basis/basis_transcoder.wasm?url";
 

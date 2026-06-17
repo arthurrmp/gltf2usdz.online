@@ -1,6 +1,6 @@
 {
   // Static, server-less deploy: the whole app (including GLB->USDZ conversion)
-  // runs in the browser. This is an assets-only Worker — no `main` script.
+  // runs in the browser. This is an assets-only Worker - no `main` script.
   "name": "gltf2usdz",
   "compatibility_date": "2026-06-08",
   "assets": {
