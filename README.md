@@ -62,7 +62,7 @@ bun run deploy     # build + wrangler deploy (uses your local `wrangler login`)
 
 The app is an **assets-only Cloudflare Worker** served at
 [gltf2usdz.online](https://gltf2usdz.online) through a custom-domain route
-(`wrangler.jsonc`); the zone must already exist in the account.
+(`wrangler.jsonc`).
 
 ### CI/CD
 
@@ -86,4 +86,6 @@ production on push to `main`**. It needs two repository secrets:
 
 - [WebUsdFramework](https://github.com/chrismichaelps/WebUsdFramework) by
   Chris M. (Michael) Pérez - the glTF → USDZ converter that powers this tool.
+- [glTF-Transform](https://gltf-transform.dev) by Don McCurdy - reads,
+  optimizes, and transforms glTF in the conversion pipeline.
 - [shadcn/ui](https://ui.shadcn.com) - UI components and the theme preset.
